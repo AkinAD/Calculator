@@ -1,17 +1,16 @@
 var screen = document.getElementById("inpNcalcDisplay");
-var toBeEval = [];
+var toBeEval = [], allOperator = [];
 var ix=0, jy=0;
 var btnOperandVal = Array.from(document.querySelectorAll('.operand'));
 var btnOperatorVal = Array.from(document.querySelectorAll('.operator'));
 var currOperator = "";
-var	operandA, operandB, temp="";
+var	operandA, operandB, index, opVal, theOperator, result = "";
 var isStillOperand = false;
 for (var i =0; i< btnOperandVal.length; i++)
  {
      btnOperandVal[i].addEventListener('click', function(e)
      {
         screen.textContent += this.value;
-        temp += this.value;
         if(isStillOperand)
         {
              toBeEval[ix][1] += this.value;
@@ -27,36 +26,172 @@ for (var i =0; i< btnOperandVal.length; i++)
      })
  }
 
-for (var i =0; i< btnOperatorVal.length; i++)
+for (var i =0; i < btnOperatorVal.length; i++)
  {
      btnOperatorVal[i].addEventListener('click', function(e)
      {
+       
         screen.textContent += this.value;
-        operandA = temp;
-        temp = 0;
+      //  operatorCount += 1;
         currOperator = this.value;
-        toBeEval.push(['operator',this.value]);
-        isStillOperand = false;
-        console.table(toBeEval);
+        if ( currOperator == "-")
+        {
+            currOperator = "+";
+            toBeEval.push(['operator',currOperator]);
+            allOperator.push([toBeEval.length-1, assignValue(currOperator), currOperator])
+          
+            toBeEval.push(['operand', "-"]);
+            isStillOperand = true;
+            ix = toBeEval.length-1;
+            console.table(toBeEval);
+            console.table(allOperator); 
+            //remember to prevent users from entering multiple operators at once 
+        }
+         else
+             {
+                 toBeEval.push(['operator',currOperator]);
+                 allOperator.push([toBeEval.length-1, assignValue(this.value), this.value])
+                 isStillOperand = false;
+                 console.table(toBeEval);
+                 console.table(allOperator);
+             }
+         
      })
  }
  
-function arrParser()
+//function arrParser()
+//{
+//    // loop the outer array
+//    for (var i = 0; i < toBeEval.length; i++)
+//    {
+//        // get the size of the inner array
+//        var innerArrayLength = toBeEval[i].length;
+//        // loop the inner array
+//        for (var j = 0; j < innerArrayLength; j++) 
+//        {
+//             if(toBeEval[i][0] == "operator")
+//             { 
+//                
+//                 
+//             }
+//        }
+//        
+//    }
+//}
+function updateOperatorList()
+{   
+    allOperator=[]; var updateTo;
+    for (var i=0; i < toBeEval.length; i ++)
+    {  
+            
+            if (toBeEval[i][0] == 'operator')
+            {
+                updateTo = toBeEval[i][1];
+                allOperator.push([i, assignValue(updateTo), updateTo])
+            }
+    }
+}
+
+
+
+
+function assignCalc()
 {
-    // loop the outer array
-    for (var i = 0; i < toBeEval.length; i++)
-    {
-        // get the size of the inner array
-        var innerArrayLength = toBeEval[i].length;
-        // loop the inner array
-        for (var j = 0; j < innerArrayLength; j++) 
+            currOperator = theOperator;
+            operandA = toBeEval[index-1][1];
+            operandB = toBeEval[index+1][1];
+            result = operate(currOperator, operandA, operandB);
+            console.log("before splice");
+            console.table(toBeEval); 
+            toBeEval.splice(index-1, 2);
+            toBeEval[index-1][1] = result;
+            updateOperatorList();
+            console.log("after splice");
+            console.table(toBeEval);
+            console.log(currOperator); console.log(operandA); console.log(operandB);
+}
+function solvePriority(pri)
+{ 
+    if (allOperator.length >=1)
+    {    var i = allOperator.length - 1;
+        for (i ;i >= 0; i--)
         {
-             if(toBeEval[i][0] == "operand")
-             {
-                     toBeEval[i-1][1] toBeEval[i-1][1 ]
-             }
-            console.log('[' + i + ',' + j + '] = ' + toBeEval[i+1][j]);
-        }
+            opVal = allOperator[i][1];
+            
+            if(opVal == pri)
+            {    console.log("index before: "+ index)
+                index = allOperator[i][0];
+                console.log("index after: "+ index)
+                theOperator = allOperator[i][2];
+                console.log("atleast we got here");        
+                assignCalc();
+                console.log("before operator spice")
+                console.table(allOperator);                
+             //   allOperator.splice(i,1);
+                 console.log("After operator spice")
+                console.table(allOperator);
+              //  i--;
+             //  i = allOperator.length -1;
+                //splice element out
+                         //rerun and find others 
+            }  
+           // else return;
+         }
+    }
+    else return;
+}
+function doMath()
+{  
+   // var x = allOperator.length - 1;
+    console.log("before while loop");
+//    console.log(x);
+//    console.log(allOperator[x][0], allOperator[x][1], allOperator[x][2])
+    while ( allOperator.length - 1 >= 0)
+    {
+        solvePriority(4);
+        solvePriority(3);
+        solvePriority(2);
+        solvePriority(1);
+       
+        
+    }
+        
+//        if(opVal == 4 )  
+//        {
+//            assignCalc();
+//        }
+//        else if(opVal == 3 )  
+//        {
+//            assignCalc();
+//        }
+//        else if(opVal == 2 )  
+//        {
+//            assignCalc();
+//        }
+//        else if(opVal == 1 )  
+//        {
+//             assignCalc();
+//        }
+        //var x = allOperator.length - 1;
+        console.log("she's here");
+        console.table(allOperator)  
+    
+}
+
+
+function assignValue(leOperator)
+{ //Using BEDMAS - Brackets then Exponents then Division/Multiplication then Addition/Subtraction. 
+   if (leOperator == '^') 
+    {
+        return 4;    
+    }
+    else if (leOperator == '*' || leOperator == '/' || leOperator == '/')
+    {
+        return 3;
+    }
+    else if (leOperator == '+' || leOperator == '-')
+    {
+        return 2;
     }
 }
 //Keyboard support 
@@ -70,7 +205,7 @@ document.addEventListener("keydown", function (e)
     {
         var ugh = String.fromCharCode(e.keyCode-48); //Numpad is misinterpreted so 48 is subrtacted to get correct key code
         screen.textContent += ugh;
-        toBeEval.push(ugh);
+        toBeEval.push(ugh); 
     }
     else if (e.which >=106 && e.which <= 111 ) //numpad operators
     {
@@ -85,10 +220,11 @@ document.addEventListener("keydown", function (e)
 });
 function calc()
 {  
-	operandB = temp;
-	temp = 0;
-	document.getElementById("eqnDisplay").textContent = document.getElementById("inpNcalcDisplay").textContent;
-    document.getElementById("inpNcalcDisplay").textContent = operate(currOperator, operandA, operandB);
+    doMath();
+    console.log("After do math");
+    console.table(toBeEval);
+    document.getElementById("eqnDisplay").textContent = document.getElementById("inpNcalcDisplay").textContent;
+    document.getElementById("inpNcalcDisplay").textContent = toBeEval[0][1];
 //    alert(currOperator+ " " + operandA + " " + operandB) 
 //    alert(operate(currOperator, operandA, operandB));
 }
@@ -138,7 +274,10 @@ function add(a, b) {
 }
 
 function subtract(a, b) {
-  return a - b;
+  return a - b ;
+}
+function otherSubtract(a, b) {
+  return parseFloat(a) + (Math.abs(parseFloat(b)) * -1) ;
 }
 
 function sum(array) {
@@ -179,4 +318,5 @@ function clearScreen()
 {
     screen.textContent = "";
     toBeEval = [];
+    allOperator=[];
 }
