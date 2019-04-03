@@ -1,6 +1,6 @@
 var screen = document.getElementById("inpNcalcDisplay");
 var toBeEval = [], allOperator = [];
-var ix=0, jy=0;
+var ix=0;
 var btnOperandVal = Array.from(document.querySelectorAll('.operand'));
 var btnOperatorVal = Array.from(document.querySelectorAll('.operator'));
 var currOperator = "";
@@ -21,8 +21,6 @@ for (var i =0; i< btnOperandVal.length; i++)
             isStillOperand = true;
             ix = toBeEval.length - 1;
         }
-        //toBeEval[ix][jy] = ;
-       // toBeEval.push(['operand',this.value]);
      })
  }
 
@@ -32,7 +30,6 @@ for (var i =0; i < btnOperatorVal.length; i++)
      {
        
         screen.textContent += this.value;
-      //  operatorCount += 1;
         currOperator = this.value;
         if ( currOperator == "-")
         {
@@ -112,6 +109,7 @@ function assignCalc()
 }
 function solvePriority(pri)
 { 
+    var opVal;
     if (allOperator.length >=1)
     {    var i = allOperator.length - 1;
         for (i ;i >= 0; i--)
@@ -152,27 +150,8 @@ function doMath()
         solvePriority(3);
         solvePriority(2);
         solvePriority(1);
-       
-        
     }
-        
-//        if(opVal == 4 )  
-//        {
-//            assignCalc();
-//        }
-//        else if(opVal == 3 )  
-//        {
-//            assignCalc();
-//        }
-//        else if(opVal == 2 )  
-//        {
-//            assignCalc();
-//        }
-//        else if(opVal == 1 )  
-//        {
-//             assignCalc();
-//        }
-        //var x = allOperator.length - 1;
+
         console.log("she's here");
         console.table(allOperator)  
     
@@ -181,11 +160,11 @@ function doMath()
 
 function assignValue(leOperator)
 { //Using BEDMAS - Brackets then Exponents then Division/Multiplication then Addition/Subtraction. 
-   if (leOperator == '^') 
+   if (leOperator == '^'|| leOperator == '%') 
     {
         return 4;    
     }
-    else if (leOperator == '*' || leOperator == '/' || leOperator == '/')
+    else if (leOperator == '*' || leOperator == '/' )
     {
         return 3;
     }
@@ -194,30 +173,62 @@ function assignValue(leOperator)
         return 2;
     }
 }
+
+function roundTo(n, digits) 
+{
+    var negative = false;
+    if (digits === undefined) {
+        digits = 0;
+    }
+        if( n < 0) {
+        negative = true;
+      n = n * -1;
+    }
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    n = (Math.round(n) / multiplicator).toFixed(2);
+    if( negative ) {    
+        n = (n * -1).toFixed(2);
+    }
+    return n;
+}
+    
+    function eventFire(el, etype){
+  if (el.fireEvent) {
+    el.fireEvent('on' + etype);
+  } else {
+    var evObj = document.createEvent('Events');
+    evObj.initEvent(etype, true, false);
+    el.dispatchEvent(evObj);
+  }
+}    
+    
 //Keyboard support 
 document.addEventListener("keydown", function (e)
-{
+{   var keyID;
     if (e.keyCode === 13) 
     {  
-       //perform calculation
+      eventFire(document.getElementById('equal'), 'click');
+       
     }
     else if (e.which >= 96 && e.which <= 105 ) // numpad (0 to 9)
     {
-        var ugh = String.fromCharCode(e.keyCode-48); //Numpad is misinterpreted so 48 is subrtacted to get correct key code
-        screen.textContent += ugh;
-        toBeEval.push(ugh); 
+       eventFire(document.getElementById(e.code), 'click');
+
     }
     else if (e.which >=106 && e.which <= 111 ) //numpad operators
     {
-        screen.textContent += String.fromCharCode(e.which - 64); //Numpad is misinterpreted so 64 is subrtacted to get correct key code
-        toBeEval.push(String.fromCharCode(e.keyCode - 64));
+        console.log(e.code);
+        eventFire(document.getElementById(e.code), 'click');
+
     }
     else if (e.which >= 48 && e.which <= 57) // NUMBAR ABOVE LETTER KEYS
-    {
-        screen.textContent += String.fromCharCode(e.which);
-        toBeEval.push(String.fromCharCode(e.keyCode));
+    {   var keyID;
+        keyID = "Numpad" + String.fromCharCode(e.which);
+       eventFire(document.getElementById(keyID), 'click');
     }
 });
+
 function calc()
 {  
     doMath();
@@ -225,28 +236,9 @@ function calc()
     console.table(toBeEval);
     document.getElementById("eqnDisplay").textContent = document.getElementById("inpNcalcDisplay").textContent;
     document.getElementById("inpNcalcDisplay").textContent = toBeEval[0][1];
-//    alert(currOperator+ " " + operandA + " " + operandB) 
-//    alert(operate(currOperator, operandA, operandB));
 }
 function operate(operator, a, b)
 {	
-	// var operandA, operatorA;
-      // array.reduce((current, total) => total += current, 0);
-    // for (var i = 0; i < arr.length; i++) 
-    // {
-    // 	if (!isNAN(arr[i])
-    // 	{
-    // 		operandA += arr[i];
-    // 	}
-    // 	else
-    // 	{
-    // 		if (arr[i] == "/" || arr[i] == "*" || arr[i] == "+" || arr[i] == "-" || arr[i] == "%")
-    // 		{
-
-    // 			 a
-    // 		}
-    // 	}
-    // }
 	if (operator == "/")
 	{
 		return divide(a,b);
@@ -295,6 +287,11 @@ function multiplyMany(array) {
 
 function divide(a, b)
 {
+    if (b == 0)
+    {
+        return "Nice try! But answer is: "  + (a/b);    
+    }
+    else
 	return a / b;
 }
 function rem(a,b)
@@ -318,5 +315,12 @@ function clearScreen()
 {
     screen.textContent = "";
     toBeEval = [];
-    allOperator=[];
+//    allOperator = [];
+//    isStillOperand = false; ix = 0; currOperator = "";
+//    operandA, operandB, index, opVal, theOperator, result = "";
+    
+     allOperator = [];
+    isStillOperand = false; ix = 0; 
+    operandA = operandB = index =0;
+    currOperator = theOperator = result = "";
 }

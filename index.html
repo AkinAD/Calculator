@@ -8,28 +8,29 @@
 	<div id="calcShell">
 		<div id="eqnDisplay" class="disp"></div>
 		<div id="inpNcalcDisplay" class="disp"></div>
-		<button class="operand" value="0">0</button>
-		<button  class="operand" value="1"><span>1</span></button>
-		<button  class="operand" value="2"><span>2</span></button>
-		<button  class="operand" value="3"><span>3</span></button>
-		<button  class="operand" value="4"><span>4</span></button>
-		<button  class="operand" value="5"><span>5</span></button>
-		<button  class="operand" value="6"><span>6</span></button>
-		<button  class="operand" value="7"><span>7</span></button>
-		<button  class="operand" value="8"><span>8</span></button>
-		<button  class="operand" value="9"><span>9</span>
-        </button>
-        <button  class="operand" value="."><span>.</span></button>
-	    <button onclick="calc()"><span>=</span></button>
-	    <button  class="operator" value="+"><span>+</span></button>
-	    <button  class="operator" value="-"><span>-</span></button>
-	    <button  class="operator" value="*"><span>*</span></button>
-	    <button  class="operator" value="/"><span>/</span></button>
-	    <button  class="operator" value="%"><span>%</span></button>
-	    <button onclick="changeSign()"><span>+/-</span></button>
-	    <button onclick="clearScreen()" ><span>AC</span></button> <!-- may double as backspace -->
+       <div id="numPad"> 
+           
+            <button  class="operand" value="7" id="Numpad7"><span>7</span></button>
+            <button  class="operand" value="8" id="Numpad8"><span>8</span></button>
+            <button  class="operand" value="9" id="Numpad9"><span>9</span></button>
+            <button  class="operand" value="4" id="Numpad4"><span>4</span></button>
+            <button  class="operand" value="5" id="Numpad5"><span>5</span></button>
+            <button  class="operand" value="6" id="Numpad6"><span>6</span></button>
+            <button  class="operand" value="1" id="Numpad1"><span>1</span></button>
+            <button  class="operand" value="2" id="Numpad2"><span>2</span></button>
+            <button  class="operand" value="3" id="Numpad3"><span>3</span></button>
+            <button  class="operand" value="0" id="Numpad0">0</button>
+            <button  class="operand" value="." id="NumpadDecimal"><span>.</span></button>
+            <button class="function" onclick="calc()"  id="equal"><span>=</span></button>
+            <button  class="operator" value="+" id="NumpadAdd"><span>+</span></button>
+            <button  class="operator" value="-" id="NumpadSubtract"><span>-</span></button>
+            <button  class="operator" value="*" id="NumpadMultiply"><span>*</span></button>
+            <button  class="operator" value="/" id="NumpadDivide"><span>/</span></button>
+            <button  class="operator" value="%" id="NumpadDecimal"><span>%</span></button>
+            <button class="function" onclick="changeSign()" disabled="disable"><span>+/-</span></button>
+            <button class="function" onclick="clearScreen()" id="clear"><span>AC</span></button> <!-- may double as backspace -->
+        </div>
     </div>
-    <p>This is a test element i put for  </p>
     
 <script src="script.js"></script>
 <a href="https:/github.com/AkinAd" target="_blank"><img src="images/Akin_Vector.png" alt="Akins Logo" id="myLogo" ></a>

@@ -1,8 +1,82 @@
+/* design inspo  https://dribbble.com/shots/2541377-Daily-UI-4-Calculator https://dribbble.com/shots/2498081-Calculator-Day-22 */ 
+/* FONT help https://stackoverflow.com/questions/3245141/using-otf-fonts-on-web-browsers */
+@font-face {
+   font-family: LeHavre;
+    src: url("fonts/LeHavre.woff") format("woff"), url("path/LeHavre.ttf") format("truetype"),  url('fonts/LeHavreRegular.otf') format('opentype');
+    font-weight: normal;
+       font-style: normal;
+}
+@font-face {
+     
+}
 .disp {
     border: 1px solid black;
     height: 20px;
 
 }
 body {
-        font-family: monospace;
+        font-family: 'LeHavre';
+}
+
+#num0
+{
+    background-color:  color: blue;
+    
+}
+#sign.sj
+{
+    height: 50px;
+}
+#myLogo
+{
+    width:130px;
+    height: 30px;
+    position: relative;
+    top: 110px;
+    left: 520px;   
+}
+#numPad 
+{ 
+    display: grid;
+    grid-template-columns: 40px 40px 40px;
+    grid-template-rows: auto auto auto; 
+    grid-column-gap: 10px;
+    grid-row-gap: 15px;
+}
+.operand, .operator, .function
+{       
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 100%;
+      background-color:  #fcfcfc;
+     /* padding: 20px ;*/
+      font-size: ;
+      text-align: center;
+      grid-column-start: auto;
+      grid-column-end: auto;
+      grid-row-start: auto;
+      grid-row-end: auto;
+    /* offset-x | offset-y | blur-radius | color */
+      box-shadow: 2px 2px 5px #c9cdd3;
+    font-family: 'LeHavre';
+    
+}
+
+.operator
+{
+    
+      background-color:  #ddedff;
+     
+}
+
+.function
+{
+      background-color: #2a4c72;
+      color: white;
+}
+#clear 
+{
+    background-color: #dd5252;
+    color: white;
 }
