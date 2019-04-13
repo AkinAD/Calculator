@@ -1,6 +1,6 @@
 var screen = document.getElementById("inpNcalcDisplay");
 var toBeEval = [], allOperator = [];
-var ix=0;
+var ix=0, iy=0, charCount=0;
 var btnOperandVal = Array.from(document.querySelectorAll('.operand'));
 var btnOperatorVal = Array.from(document.querySelectorAll('.operator'));
 var currOperator = "";
@@ -10,49 +10,61 @@ for (var i =0; i< btnOperandVal.length; i++)
  {
      btnOperandVal[i].addEventListener('click', function(e)
      {
-        screen.textContent += this.value;
-        if(isStillOperand)
-        {
-             toBeEval[ix][1] += this.value;
-        }
-        else
-        {
-            toBeEval.push(['operand',this.value]);
-            isStillOperand = true;
-            ix = toBeEval.length - 1;
-        }
-     })
+         if (charCount != 10)
+         {
+             charCount++;
+            screen.textContent += this.value;
+            if(isStillOperand)
+            {
+                 toBeEval[ix][1] += this.value;
+            }
+            else
+            {
+                toBeEval.push(['operand',this.value]);
+                isStillOperand = true;
+                ix = toBeEval.length - 1;
+            }
+         console.log(charCount);
+         }
+         else{
+             tooManyChar();
+         }
+             })
  }
 
 for (var i =0; i < btnOperatorVal.length; i++)
  {
      btnOperatorVal[i].addEventListener('click', function(e)
      {
-       
-        screen.textContent += this.value;
-        currOperator = this.value;
-        if ( currOperator == "-")
-        {
-            currOperator = "+";
-            toBeEval.push(['operator',currOperator]);
-            allOperator.push([toBeEval.length-1, assignValue(currOperator), currOperator])
-          
-            toBeEval.push(['operand', "-"]);
-            isStillOperand = true;
-            ix = toBeEval.length-1;
-            console.table(toBeEval);
-            console.table(allOperator); 
-            //remember to prevent users from entering multiple operators at once 
-        }
-         else
-             {
-                 toBeEval.push(['operator',currOperator]);
-                 allOperator.push([toBeEval.length-1, assignValue(this.value), this.value])
-                 isStillOperand = false;
-                 console.table(toBeEval);
-                 console.table(allOperator);
-             }
-         
+        if (charCount != 10)
+         {
+                 charCount++;
+            screen.textContent += this.value;
+            currOperator = this.value;
+            if ( currOperator == "-")
+            {
+                currOperator = "+";
+                toBeEval.push(['operator',currOperator]);
+                allOperator.push([toBeEval.length-1, assignValue(currOperator), currOperator])
+
+                toBeEval.push(['operand', "-"]);
+                isStillOperand = true;
+                ix = toBeEval.length-1;
+                console.table(toBeEval);
+                console.table(allOperator); 
+                //remember to prevent users from entering multiple operators at once 
+            }
+             else
+                 {
+                     toBeEval.push(['operator',currOperator]);
+                     allOperator.push([toBeEval.length-1, assignValue(this.value), this.value])
+                     isStillOperand = false;
+                     console.table(toBeEval);
+                     console.table(allOperator);
+                 }
+
+         console.log(charCount);
+         }
      })
  }
  
@@ -89,7 +101,18 @@ function updateOperatorList()
     }
 }
 
-
+function tooManyChar()
+{
+    if (screen.style.fontSize == '55px')
+    {
+            alert("Maximum Character count has been reached!");
+    }
+    else
+    {
+        screen.style.fontSize = '55px';
+        alert("Maximum Character count has been reached!");
+    }
+}
 
 
 function assignCalc()
@@ -101,7 +124,7 @@ function assignCalc()
             console.log("before splice");
             console.table(toBeEval); 
             toBeEval.splice(index-1, 2);
-            toBeEval[index-1][1] = result;
+            toBeEval[index-1][1] = result.toString();
             updateOperatorList();
             console.log("after splice");
             console.table(toBeEval);
@@ -174,6 +197,10 @@ function assignValue(leOperator)
     }
 }
 
+function precise(x) {
+  return Number.parseFloat(x).toPrecision(4);
+}
+
 function roundTo(n, digits) 
 {
     var negative = false;
@@ -208,7 +235,8 @@ document.addEventListener("keydown", function (e)
 {   var keyID;
     if (e.keyCode === 13) 
     {  
-      eventFire(document.getElementById('equal'), 'click');
+        document.getElementById('equal').focus()
+        eventFire(document.getElementById('equal'), 'click');
        
     }
     else if (e.which >= 96 && e.which <= 105 ) // numpad (0 to 9)
@@ -227,15 +255,32 @@ document.addEventListener("keydown", function (e)
         keyID = "Numpad" + String.fromCharCode(e.which);
        eventFire(document.getElementById(keyID), 'click');
     }
+    else if (e.which == 8)
+    {
+       backspace();     
+    }
 });
 
 function calc()
-{  
-    doMath();
-    console.log("After do math");
-    console.table(toBeEval);
-    document.getElementById("eqnDisplay").textContent = document.getElementById("inpNcalcDisplay").textContent;
-    document.getElementById("inpNcalcDisplay").textContent = toBeEval[0][1];
+{
+
+    if(isArrayGood(toBeEval) && toBeEval[toBeEval.length-1][0] == 'operand')
+    {   //check if array is good and if last element is a number 
+        doMath();
+        console.log("After do math");
+        console.table(toBeEval);
+        document.getElementById("eqnDisplay").textContent = screen.textContent;
+        if (toBeEval[0][1].length >= 7)
+        {
+             toBeEval[0][1].tofix(7);
+        }
+        else 
+        {
+            screen.textContent = toBeEval[0][1];
+            ix = 0; // new addition
+            charCount = screen.textContent.length;
+        }
+    }
 }
 function operate(operator, a, b)
 {	
@@ -260,6 +305,18 @@ function operate(operator, a, b)
 		return rem(a,b);
 	}
 }
+function isArrayGood(arr)
+{
+    if (!Array.isArray(arr) || !arr.length) 
+    {
+        return false;
+    }
+    else 
+    {
+        return true;
+    }
+}
+
 
 function add(a, b) {
   return parseFloat(a) + parseFloat(b);
@@ -289,6 +346,7 @@ function divide(a, b)
 {
     if (b == 0)
     {
+        screen.style.fontSize = '40px';
         return "Nice try! But answer is: "  + (a/b);    
     }
     else
@@ -311,6 +369,49 @@ function factorial(n) {
   return product;
 }
 
+function backspace()
+{
+    if(charCount > 0)
+    {
+        iy = toBeEval.length - 1;
+        if (toBeEval[iy][0] == 'operator')
+        {       console.table(toBeEval);  
+                toBeEval.pop();
+                allOperator.pop();
+                charCount--;
+            screen.textContent= screen.textContent.substring(0, screen.textContent.length - 1);
+            console.table(toBeEval);
+            console.log(iy+ " " + toBeEval[i][1]);
+         }
+        else
+        {
+            //remove a string char froom the screen and from the array , if the array becomes empty, pop that spot 
+            if ( toBeEval[iy][1].length <= 1 || (toBeEval[iy][1] =='-'+ /[0-9]/g && toBeEval[iy][1].length == 1))
+            {
+                 if (toBeEval[0][1].length <=1)
+                       {
+                               clearScreen();
+                       }
+                    toBeEval.pop();    
+                    console.log("SPECIAL CASE WAS REACHED")
+                    charCount--;
+                    screen.textContent= screen.textContent.substring(0, screen.textContent.length - 1);
+            }
+            else
+            {           //iy = toBeEval.length - 1;
+                console.log(iy+ " " + toBeEval[iy][1]);
+                charCount--;
+                toBeEval[iy][1] = toBeEval[iy][1].toString().substring(0, toBeEval[iy][1].length - 1); // error here
+                screen.textContent= screen.textContent.substring(0, screen.textContent.length - 1);
+            }            
+        }
+        console.table(toBeEval);
+        console.log('character count: '+ charCount);
+        console.table(allOperator);
+    }
+    
+}
+
 function clearScreen()
 {
     screen.textContent = "";
@@ -318,9 +419,9 @@ function clearScreen()
 //    allOperator = [];
 //    isStillOperand = false; ix = 0; currOperator = "";
 //    operandA, operandB, index, opVal, theOperator, result = "";
-    
+     screen.style.fontSize = '60px';
      allOperator = [];
     isStillOperand = false; ix = 0; 
-    operandA = operandB = index =0;
+    operandA = operandB = index = charCount = 0;
     currOperator = theOperator = result = "";
 }

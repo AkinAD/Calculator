@@ -7,15 +7,60 @@
        font-style: normal;
 }
 @font-face {
-     
+    font-family: ArticoThin;
+    src: url('fonts/ArticoThin.otf') format('opentype');
+    font-weight: normal;
+       font-style: normal;
+}
+@font-face {
+    font-family: UltimaLight;
+    src: url('fonts/UltimaLight.ttf') format('truetype');
+    font-weight: normal;
+       font-style: normal;
 }
 .disp {
     border: 1px solid black;
     height: 20px;
 
 }
-body {
-        font-family: 'LeHavre';
+#inpNcalcDisplay
+{
+    height: 100px;
+    background-color: #698EB6;
+    border:  none;
+    text-align: right;
+    font-size: 60px;
+    font-family: 'ArticoThin';
+    color: white;
+    overflow: hidden;
+
+    
+}
+#eqnDisplay 
+{
+    height: 45px;
+    background-color: #4B6D91;
+    border: none;
+    outline-color: #4B6D91;
+    text-align: right;
+    line-height: 50px;
+     font-family: 'ArticoThin';
+    font-size: 20px;
+    color: white;
+    border-top-left-radius: 13px;
+    border-top-right-radius: 13px;
+}
+body 
+{
+    font-family: 'LeHavre';
+    background-color: #F2F5F9;
+    height: auto;
+    
+}
+html 
+{
+  min-width: 100%;
+  min-height: 100%;
 }
 
 #num0
@@ -23,35 +68,39 @@ body {
     background-color:  color: blue;
     
 }
-#sign.sj
-{
-    height: 50px;
-}
 #myLogo
 {
     width:130px;
     height: 30px;
-    position: relative;
-    top: 110px;
-    left: 520px;   
+    position: absolute;
+    top: 670px;
+    left: 1230px;   
+    z-index: 10;
 }
 #numPad 
 { 
+    position: relative;
+    top: 15px;
+    left: 25px;
     display: grid;
-    grid-template-columns: 40px 40px 40px;
+    grid-template-columns: 40px 40px 40px 40px;
     grid-template-rows: auto auto auto; 
-    grid-column-gap: 10px;
-    grid-row-gap: 15px;
+    grid-column-gap: 10.5%;
+    grid-row-gap: 4%;
+    background-color: white;
+    width: 300px;
+    padding: 
 }
 .operand, .operator, .function
-{       
-      width: 40px;
-      height: 40px;
+{    
+    /* these are the buttons */
+      width: 60px;
+      height: 60px;
       border: none;
       border-radius: 100%;
       background-color:  #fcfcfc;
      /* padding: 20px ;*/
-      font-size: ;
+      font-size: 15px ;
       text-align: center;
       grid-column-start: auto;
       grid-column-end: auto;
@@ -60,14 +109,14 @@ body {
     /* offset-x | offset-y | blur-radius | color */
       box-shadow: 2px 2px 5px #c9cdd3;
     font-family: 'LeHavre';
-    
+    color: #698EB6;
+    /* another color #F2F5F9 */ 
 }
-
 .operator
 {
-    
-      background-color:  #ddedff;
-     
+      background-color:  #ddedff;    
+    font-family: 'UltimaLight';
+    font-size: 30px;
 }
 
 .function
@@ -79,4 +128,105 @@ body {
 {
     background-color: #dd5252;
     color: white;
+}
+#calcShell
+{   position: relative;
+    width: 330px;
+    height:540px;
+    top: -1650px;
+    z-index: 5;
+    border-radius: 15px;
+    background-color: white;
+    display: inline-block;
+    box-shadow: 6px 6px 5px #272828;
+
+}
+#holdItAll
+{   position: relative;
+     background-color: #698EB6;
+    margin: auto;
+    width: 70%;
+    z-index: 10;
+    height: 650px;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 3px 3px 3px #707070;
+    overflow: hidden;
+    text-align: center;
+    display: inline-block;
+    left: 15%;
+    top: 50px;
+}
+#darkBlueBox
+{
+     position: relative;
+    transform: rotate(5deg); /* Equal to rotateZ(45deg) */
+    background-color: #335A84;
+    height: 900px;
+    width: 700px;
+    top: -800px;
+    left: 200px;
+    z-index: 2;
+    box-shadow: 2px -2px 4px #354759;
+}
+.creds
+{
+    border: 1px none black;
+    border-radius: 20px;
+    text-align: center;
+    font-family: 'ArticoThin';
+    font-weight: 900;
+    width: 700px;
+    display: inline-block;
+    position: relative;
+    top:50px;
+    left: 30%;
+    background-color: #e2dc7f;
+    color: gray;
+        box-shadow: 2px 2px 2px #cccbc7;
+
+}
+button:hover
+{
+   filter: brightness(85%);
+}
+#redBox
+{
+    position: relative;
+    transform: rotate(45deg); /* Equal to rotateZ(45deg) */
+    background-color: #EB8468;
+    height: 800px;
+    width: 700px;
+    z-index: 3;
+    box-shadow: 2px -2px 4px #273f59;
+
+}
+.circ
+{   
+    background-color: aqua;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    z-index: 15;
+    
+}
+#redCirc
+{   position: relative;
+     background-color: #EB8481;
+    top: -1700px;
+    left: 1100px;
+    box-shadow: -1px 1px 3px #273f59;
+
+}
+#darkBlueCirc
+{   position: relative;
+    background-color: #335A89;
+    top: -2400px;
+    left: 50px;
+    box-shadow: 1px 1px 3px #273f59;
+    
+}
+#backspace
+{
+    font-size: 25px;
 }
